@@ -1,26 +1,30 @@
 #include "binary_trees.h"
 
 /**
-* binary_tree_is_full - checks if a binary tree is full
-* @tree: pointer to the root node of the tree to check
-* Return: 1 if tree is full, 0 if tree is NULL or not full
-* Author: Frank Onyema Orji
-*/
-int binary_tree_is_full(const binary_tree_t *tree)
+ * binary_trees_ancestor - finds
+ * the lowest common ancestor of two nodes
+ * @first: pointer to the first node
+ * @second: pointer to the second node
+ * Return: pointer to the lowest common
+ * ancestor node, or NULL if not found
+ * Author: Frank Onyema Orji
+ */
+binary_tree_t *binary_trees_ancestor(const binary_tree_t *first, const binary_tree_t *second)
 {
-	/* if tree is NULL, return 0 */
-	if (tree == NULL)
-		return (0);
+    if (first == NULL || second == NULL)
+    {
+        return (NULL);
+    }
 
-	/* if tree has no children, return 1 */
-	if (tree->left == NULL && tree->right == NULL)
-		return (1);
+    if (first == second)
+    {
+        return (binary_tree_t *)first;
+    }
 
-	/* if tree has one child, return 0 */
-	if (tree->left == NULL || tree->right == NULL)
-		return (0);
+    if (first->parent == second || first == second->parent)
+    {
+        return (binary_tree_t *)(first->parent);
+    }
 
-	/* if tree has two children, return 1 if both are full */
-	return (binary_tree_is_full(tree->left) &&
-			binary_tree_is_full(tree->right));
+    return binary_trees_ancestor(first->parent, second->parent);
 }
