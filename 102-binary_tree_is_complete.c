@@ -1,93 +1,93 @@
 #include "binary_trees.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 /**
- * enqueue - Adds a node to the queue.
- * @queue: Pointer to the queue.
- * @rear: Pointer to the index of the rear of the queue.
- * @node: Node to add to the queue.
+ * binary_tree_is_leaf - checks if a node is a leaf
+ * @node: pointer to the node to check
+ *
+ * Return: 1 if node is a leaf, and 0 otherwise.
+ * If node is NULL, return 0
+ * Author: Frank Onyema Orji
  */
-void enqueue(binary_tree_t **queue, int *rear, binary_tree_t *node)
+int binary_tree_is_leaf(const binary_tree_t *node)
 {
-	queue[(*rear)++] = node;
+	if (node != NULL && node->left == NULL && node->right == NULL)
+		return (1);
+	return (0);
 }
 
 /**
- * dequeue - Removes a node from the queue.
- * @queue: Pointer to the queue.
- * @front: Pointer to the index of the front of the queue.
+ * binary_tree_height - measures the height of a binary tree
+ * @tree: pointer to the root node of the tree to measure the height of
  *
- * Return: The node removed from the queue.
+ * Return: the height of the tree. If tree is NULL, return 0
  */
-binary_tree_t *dequeue(binary_tree_t **queue, int *front)
+size_t binary_tree_height(const binary_tree_t *tree)
 {
-	return queue[(*front)++];
-}
-
-/**
- * binary_tree_is_complete - Checks if a binary tree is complete.
- * @tree: Pointer to the root node of the tree to check.
- *
- * Return: 1 if the tree is complete, 0 otherwise or if tree is NULL.
- */
-int binary_tree_is_complete(const binary_tree_t *tree)
-{
-	binary_tree_t **queue;
-	int front, rear, found_non_full_node, queue_size;
-	binary_tree_t *current;
+	size_t left, right;
 
 	if (tree == NULL)
 		return (0);
+	left = binary_tree_height(tree->left);
+	right = binary_tree_height(tree->right);
+	if (left >= right)
+		return (1 + left);
+	return (1 + right);
+}
 
-	/* Initialize variables */
-	front = 0;
-	rear = 0;
-	found_non_full_node = 0;
-	queue_size = 1024; /* Arbitrary large size for simplicity */
-	queue = malloc(queue_size * sizeof(*queue));
+/**
+ * binary_tree_is_perfect - checks if a binary tree is perfect
+ * @tree: pointer to the root node of the tree to check
+ *
+ * Return: 1 if perfect, 0 otherwise. If tree is NULL, return 0
+ */
+int binary_tree_is_perfect(const binary_tree_t *tree)
+{
+	binary_tree_t *l, *r;
 
-	if (queue == NULL)
+	if (tree == NULL)
+		return (1);
+	l = tree->left;
+	r = tree->right;
+	if (binary_tree_is_leaf(tree))
+		return (1);
+	if (l == NULL || r == NULL)
 		return (0);
-
-	/* Start with the root node */
-	enqueue(queue, &rear, (binary_tree_t *)tree);
-
-	while (front < rear)
+	if (binary_tree_height(l) == binary_tree_height(r))
 	{
-		current = dequeue(queue, &front);
-
-		/* If we found a non-full node previously, all following nodes must be leaf nodes */
-		if (found_non_full_node)
-		{
-			if (current->left != NULL || current->right != NULL)
-			{
-				free(queue);
-				return (0);
-			}
-		}
-
-		/* Enqueue left child */
-		if (current->left)
-			enqueue(queue, &rear, current->left);
-		else
-			found_non_full_node = 1;
-
-		/* Enqueue right child */
-		if (current->right)
-		{
-			/* If there's a right child without a left child, it's not complete */
-			if (current->left == NULL)
-			{
-				free(queue);
-				return (0);
-			}
-			enqueue(queue, &rear, current->right);
-		}
-		else
-			found_non_full_node = 1;
+		if (binary_tree_is_perfect(l) && binary_tree_is_perfect(r))
+			return (1);
 	}
+	return (0);
+}
+/**
+ * binary_tree_is_complete -  checks if a binary tree is complete
+ * @tree: pointer to the root node of the tree to check
+ *
+ * Return: 1 if complete, 0 otherwise. If tree is NULL, return 0
+ */
+int binary_tree_is_complete(const binary_tree_t *tree)
+{
+	size_t l_height, r_height;
+	binary_tree_t *l, *r;
 
-	free(queue);
-	return (1);
+	if (tree == NULL)
+		return (0);
+	if (binary_tree_is_leaf(tree))
+		return (1);
+	l = tree->left;
+	r = tree->right;
+	l_height = binary_tree_height(l);
+	r_height = binary_tree_height(r);
+	if (l_height == r_height)
+	{
+		if (binary_tree_is_perfect(l) && binary_tree_is_complete(r))
+			return (1);
+	}
+	else if (l_height == r_height + 1)
+	{
+		if (binary_tree_is_complete(l) && binary_tree_is_perfect(r))
+			return (1);
+	}
+	return (0);
 }
