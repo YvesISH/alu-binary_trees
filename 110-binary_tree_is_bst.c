@@ -33,7 +33,7 @@ int is_bst_util(const binary_tree_t *tree, int *prev)
  */
 int binary_tree_is_bst(const binary_tree_t *tree)
 {
-    int prev = -1; // Store the previous node's value
+    int prev = -1; /* Store the previous node's value */
 
     if (tree == NULL)
         return (0);
