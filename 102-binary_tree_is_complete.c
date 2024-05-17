@@ -22,7 +22,36 @@ void enqueue(binary_tree_t **queue, int *rear, binary_tree_t *node)
  */
 binary_tree_t *dequeue(binary_tree_t **queue, int *front)
 {
-	return queue[(*front)++];
+	return (queue[(*front)++]);
+}
+
+/**
+ * is_complete_node - Checks the current node in the context of completeness.
+ * @current: The current node being checked.
+ * @found_non_full_node: Pointer to flag indicating if a non-full node was found.
+ *
+ * Return: 0 if the tree is not complete, 1 otherwise.
+ */
+int is_complete_node(binary_tree_t *current, int *found_non_full_node)
+{
+	if (*found_non_full_node)
+	{
+		if (current->left != NULL || current->right != NULL)
+		{
+			return (0);
+		}
+	}
+
+	if (current->left == NULL)
+	{
+		*found_non_full_node = 1;
+	}
+	if (current->right != NULL && current->left == NULL)
+	{
+		return (0);
+	}
+
+	return (1);
 }
 
 /**
@@ -57,35 +86,19 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	{
 		current = dequeue(queue, &front);
 
-		/* If we found a non-full node previously, all following nodes must be leaf nodes */
-		if (found_non_full_node)
+		if (!is_complete_node(current, &found_non_full_node))
 		{
-			if (current->left != NULL || current->right != NULL)
-			{
-				free(queue);
-				return (0);
-			}
+			free(queue);
+			return (0);
 		}
 
 		/* Enqueue left child */
 		if (current->left)
 			enqueue(queue, &rear, current->left);
-		else
-			found_non_full_node = 1;
 
 		/* Enqueue right child */
 		if (current->right)
-		{
-			/* If there's a right child without a left child, it's not complete */
-			if (current->left == NULL)
-			{
-				free(queue);
-				return (0);
-			}
 			enqueue(queue, &rear, current->right);
-		}
-		else
-			found_non_full_node = 1;
 	}
 
 	free(queue);
