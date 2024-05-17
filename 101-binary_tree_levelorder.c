@@ -1,55 +1,25 @@
 #include "binary_trees.h"
-#include <stdlib.h>
 
 /**
- * binary_tree_levelorder - Goes through a binary tree using level-order traversal.
- * @tree: Pointer to the root node of the tree to traverse.
- * @func: Pointer to a function to call for each node.
- */
-void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
+* binary_tree_is_full - checks if a binary tree is full
+* @tree: pointer to the root node of the tree to check
+* Return: 1 if tree is full, 0 if tree is NULL or not full
+*/
+int binary_tree_is_full(const binary_tree_t *tree)
 {
-    if (tree == NULL || func == NULL)
-        return;
+	/* if tree is NULL, return 0 */
+	if (tree == NULL)
+		return (0);
 
-    size_t front = 0, back = 0;
-    size_t max_nodes = 1024;
-    const binary_tree_t **queue = malloc(max_nodes * sizeof(*queue));
+	/* if tree has no children, return 1 */
+	if (tree->left == NULL && tree->right == NULL)
+		return (1);
 
-    if (queue == NULL)
-        return;
+	/* if tree has one child, return 0 */
+	if (tree->left == NULL || tree->right == NULL)
+		return (0);
 
-    queue[back++] = tree;
-
-    while (front < back)
-    {
-        const binary_tree_t *node = queue[front++];
-
-        func(node->n);
-
-        if (node->left != NULL)
-        {
-            if (back >= max_nodes)
-            {
-                max_nodes *= 2;
-                queue = realloc(queue, max_nodes * sizeof(*queue));
-                if (queue == NULL)
-                    return;
-            }
-            queue[back++] = node->left;
-        }
-
-        if (node->right != NULL)
-        {
-            if (back >= max_nodes)
-            {
-                max_nodes *= 2;
-                queue = realloc(queue, max_nodes * sizeof(*queue));
-                if (queue == NULL)
-                    return;
-            }
-            queue[back++] = node->right;
-        }
-    }
-
-    free(queue);
+	/* if tree has two children, return 1 if both are full */
+	return (binary_tree_is_full(tree->left) &&
+			binary_tree_is_full(tree->right));
 }
