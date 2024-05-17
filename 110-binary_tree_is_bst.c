@@ -19,7 +19,7 @@ int is_bst_util(const binary_tree_t *tree, int *prev)
 
 		*prev = tree->n;
 
-		return is_bst_util(tree->right, prev);
+		return (is_bst_util(tree->right, prev));
 	}
 
 	return (1);
@@ -38,5 +38,5 @@ int binary_tree_is_bst(const binary_tree_t *tree)
 	if (tree == NULL)
 		return (0);
 
-	return is_bst_util(tree, &prev);
+	return (is_bst_util(tree, &prev));
 }
