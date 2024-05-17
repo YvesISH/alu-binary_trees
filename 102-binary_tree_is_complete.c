@@ -55,6 +55,27 @@ int is_complete_node(binary_tree_t *current, int *found_non_full_node)
 }
 
 /**
+ * init_queue - Initializes the queue for level order traversal.
+ * @tree: Pointer to the root node of the tree to check.
+ * @queue: Pointer to the queue.
+ * @queue_size: Size of the queue.
+ *
+ * Return: 0 on failure, 1 on success.
+ */
+int init_queue(const binary_tree_t *tree, binary_tree_t ***queue, int *queue_size)
+{
+	*queue_size = 1024; /* Arbitrary large size for simplicity */
+	*queue = malloc(*queue_size * sizeof(**queue));
+
+	if (*queue == NULL)
+		return (0);
+
+	/* Start with the root node */
+	enqueue(*queue, &(int){0}, (binary_tree_t *)tree);
+	return (1);
+}
+
+/**
  * binary_tree_is_complete - Checks if a binary tree is complete.
  * @tree: Pointer to the root node of the tree to check.
  *
@@ -69,18 +90,13 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	if (tree == NULL)
 		return (0);
 
-	/* Initialize variables */
-	front = 0;
-	rear = 0;
-	found_non_full_node = 0;
-	queue_size = 1024; /* Arbitrary large size for simplicity */
-	queue = malloc(queue_size * sizeof(*queue));
-
-	if (queue == NULL)
+	if (!init_queue(tree, &queue, &queue_size))
 		return (0);
 
-	/* Start with the root node */
-	enqueue(queue, &rear, (binary_tree_t *)tree);
+	/* Initialize variables */
+	front = 0;
+	rear = 1; /* Already added the root node */
+	found_non_full_node = 0;
 
 	while (front < rear)
 	{
@@ -104,3 +120,4 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	free(queue);
 	return (1);
 }
+
