@@ -1,25 +1,36 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "binary_trees.h"
 
 /**
-* binary_tree_is_full - checks if a binary tree is full
-* @tree: pointer to the root node of the tree to check
-* Return: 1 if tree is full, 0 if tree is NULL or not full
-*/
-int binary_tree_is_full(const binary_tree_t *tree)
+ * print_num - Prints a number
+ *
+ * @n: Number to be printed
+ */
+void print_num(int n)
 {
-	/* if tree is NULL, return 0 */
-	if (tree == NULL)
-		return (0);
+    printf("%d\n", n);
+}
 
-	/* if tree has no children, return 1 */
-	if (tree->left == NULL && tree->right == NULL)
-		return (1);
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+    binary_tree_t *root;
 
-	/* if tree has one child, return 0 */
-	if (tree->left == NULL || tree->right == NULL)
-		return (0);
+    root = binary_tree_node(NULL, 98);
+    root->left = binary_tree_node(root, 12);
+    root->right = binary_tree_node(root, 402);
+    root->left->left = binary_tree_node(root->left, 6);
+    root->left->right = binary_tree_node(root->left, 56);
+    root->right->left = binary_tree_node(root->right, 256);
+    root->right->right = binary_tree_node(root->right, 512);
 
-	/* if tree has two children, return 1 if both are full */
-	return (binary_tree_is_full(tree->left) &&
-			binary_tree_is_full(tree->right));
+    binary_tree_print(root);
+    binary_tree_levelorder(root, &print_num);
+    binary_tree_delete(root);
+    return (0);
 }
