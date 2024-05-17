@@ -19,7 +19,7 @@ int get_depth(const binary_tree_t *tree)
 }
 
 /**
- * is_perfect_recursive - Recursive helper function to check if the tree is perfect.
+ * is_perfect_recursive - .....
  * @tree: Pointer to the root node of the tree to check.
  * @depth: Depth of the tree.
  * @level: Current level in the tree.
