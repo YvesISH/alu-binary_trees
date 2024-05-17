@@ -1,36 +1,59 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "binary_trees.h"
 
 /**
- * print_num - Prints a number
+ * binary_tree_levelorder - Goes through a binary tree
+ * using level-order traversal
+ * @tree: pointer to the root node of the tree to traverse
+ * @func: pointer to a function to call for each node
  *
- * @n: Number to be printed
+ * binary_tree_print_level - Prints nodes at a given level
+ * @tree: pointer to the root node of the tree
+ * @func: pointer to a function to call for each node
+ *
+ * @tree: pointer to the root node of the tree to measure the height
+ * Return: height of the tree, or 0 if tree is NULL
+ * Author: Frank Onyema Orji
  */
-void print_num(int n)
+void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 {
-    printf("%d\n", n);
+	size_t height, i;
+
+	if (tree == NULL || func == NULL)
+		return;
+
+	height = binary_tree_height(tree) + 1;
+	for (i = 0; i < height; i++)
+		binary_tree_print_level(tree, i, func);
 }
 
 /**
- * main - Entry point
- *
- * Return: Always 0 (Success)
+ * binary_tree_height - Measures the height of a binary tree
+ * @tree: pointer to the root node of the tree to measure the height
+ * Return: height of the tree, or 0 if tree is NULL
  */
-int main(void)
+size_t binary_tree_height(const binary_tree_t *tree)
 {
-    binary_tree_t *root;
+	size_t left_height, right_height;
 
-    root = binary_tree_node(NULL, 98);
-    root->left = binary_tree_node(root, 12);
-    root->right = binary_tree_node(root, 402);
-    root->left->left = binary_tree_node(root->left, 6);
-    root->left->right = binary_tree_node(root->left, 56);
-    root->right->left = binary_tree_node(root->right, 256);
-    root->right->right = binary_tree_node(root->right, 512);
+	if (tree == NULL)
+		return (0);
 
-    binary_tree_print(root);
-    binary_tree_levelorder(root, &print_num);
-    binary_tree_delete(root);
-    return (0);
+	left_height = tree->left ? 1 + binary_tree_height(tree->left) : 0;
+	right_height = tree->right ? 1 + binary_tree_height(tree->right) : 0;
+	return (left_height > right_height ? left_height : right_height);
+}
+
+void binary_tree_print_level(const binary_tree_t *tree, size_t level,
+		void (*func)(int))
+{
+	if (tree == NULL)
+		return;
+
+	if (level == 0)
+		func(tree->n);
+	else if (level > 0)
+	{
+		binary_tree_print_level(tree->left, level - 1, func);
+		binary_tree_print_level(tree->right, level - 1, func);
+	}
 }
