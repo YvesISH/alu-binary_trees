@@ -1,7 +1,7 @@
 #include "binary_trees.h"
 
 /**
- * is_bst_util - Recursive utility function to check if a binary tree is a valid BST
+ * is_bst_util - Recursive utility
  * @tree: A pointer to the root node of the tree
  * @prev: A pointer to the previous node's value
  *
