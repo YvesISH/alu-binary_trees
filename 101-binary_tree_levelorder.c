@@ -2,7 +2,7 @@
 
 /**
  * binary_tree_levelorder - Goes through a binary tree
- * using level-order traversal
+ * using level-order traversal tree
  * @tree: pointer to the root node of the tree to traverse
  * @func: pointer to a function to call for each node
  *
